@@ -99,7 +99,7 @@ return false    }
     private fun placeMarkerOnMap(location: LatLng) {
         val markerOptions = MarkerOptions().position(location)
 
-        val titleStr = getAddress(location)  // add these two lines
+        val titleStr = getAddress(location)
         markerOptions.title(titleStr)
         map.addMarker(markerOptions)
     }
