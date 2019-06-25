@@ -1,13 +1,17 @@
 package com.example.app_mapas
 
+import android.content.DialogInterface
 import android.content.pm.PackageManager
 import android.location.Address
 import android.location.Geocoder
 import android.location.Location
 import android.os.Bundle
 import android.support.v4.app.ActivityCompat
+import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
+import android.view.View
+import android.widget.Toast
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.CameraUpdateFactory
@@ -103,4 +107,21 @@ return false    }
         markerOptions.title(titleStr)
         map.addMarker(markerOptions)
     }
+
+    fun showdialog(view: View) {
+
+        val alertDialog = AlertDialog.Builder(this)
+            .setIcon(android.R.drawable.ic_dialog_alert)
+            .setTitle("Estas seguro que quieres salir?")
+            .setMessage("Precione si para salir")
+            .setPositiveButton("Yes", DialogInterface.OnClickListener { dialog, i ->
+                finish()
+            })
+            .setNegativeButton("No", DialogInterface.OnClickListener { dialogInterface, i ->
+                Toast.makeText(applicationContext, "Cancelado", Toast.LENGTH_LONG).show()
+            })
+            .show()
+    }
+
+
 }
