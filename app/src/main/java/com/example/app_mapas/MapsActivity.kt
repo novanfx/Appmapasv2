@@ -21,6 +21,7 @@ import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
+import com.google.firebase.database.*
 import java.io.IOException
 
 class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
@@ -30,6 +31,8 @@ return false    }
     private lateinit var map: GoogleMap
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private lateinit var lastLocation: Location
+    private lateinit var mDatabase:DatabaseReference
+
 
     companion object {
         private const val LOCATION_PERMISSION_REQUEST_CODE = 1
@@ -50,7 +53,6 @@ return false    }
             if (location != null) {
                 lastLocation = location
                 val currentLatLng = LatLng(location.latitude, location.longitude)
-                placeMarkerOnMap(currentLatLng)
                 map.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLatLng, 12f))
             }
         }
@@ -88,6 +90,7 @@ return false    }
                 .findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync(this)
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
+        mDatabase = FirebaseDatabase.getInstance().getReference()
 
     }
 
@@ -95,6 +98,27 @@ return false    }
         map = googleMap
         map.getUiSettings().setZoomControlsEnabled(true)
         map.setOnMarkerClickListener(this)
+        mDatabase.child("locales").addValueEventListener(object : ValueEventListener{
+            override fun onCancelled(p0: DatabaseError) {
+            }
+
+            override fun onDataChange(p0: DataSnapshot) {
+                map.clear()
+                for (h in p0.children){
+                    val lc = h.getValue(FiltrarInfo::class.java)
+                    val longitud = lc?.longitud!!
+                    val latitud = lc?.latitud!!
+                    val nombreLocal = lc?.nombreLocal
+                    val marker = MarkerOptions()
+
+                    marker.position(LatLng(latitud,longitud))
+                    marker.title(nombreLocal)
+                    map.addMarker(marker)
+                }
+
+            }
+        })
+
 
         setUpMap()
 
