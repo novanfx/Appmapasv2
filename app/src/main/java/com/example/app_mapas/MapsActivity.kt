@@ -49,7 +49,6 @@ return false    }
         map.isMyLocationEnabled = true
 
         fusedLocationClient.lastLocation.addOnSuccessListener(this) { location ->
-            // Got last known location. In some rare situations this can be null.
             if (location != null) {
                 lastLocation = location
                 val currentLatLng = LatLng(location.latitude, location.longitude)
@@ -85,7 +84,6 @@ return false    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_maps)
-        // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         val mapFragment = supportFragmentManager
                 .findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync(this)
@@ -107,8 +105,8 @@ return false    }
                 for (h in p0.children){
                     val lc = h.getValue(FiltrarInfo::class.java)
                     val longitud = lc?.longitud!!
-                    val latitud = lc?.latitud!!
-                    val nombreLocal = lc?.nombreLocal
+                    val latitud = lc.latitud
+                    val nombreLocal = lc.nombreLocal
                     val marker = MarkerOptions()
 
                     marker.position(LatLng(latitud,longitud))
@@ -118,8 +116,6 @@ return false    }
 
             }
         })
-
-
         setUpMap()
 
     }
